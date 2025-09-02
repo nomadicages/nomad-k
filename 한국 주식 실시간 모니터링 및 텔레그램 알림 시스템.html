@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)https://www.genspark.ai/api/page_private?id=ultgspni -->
+<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국 주식 실시간 모니터링 및 텔레그램 알림 시스템</title>
+    <link href="./한국 주식 실시간 모니터링 및 텔레그램 알림 시스템_files/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./한국 주식 실시간 모니터링 및 텔레그램 알림 시스템_files/all.min.css">
+    <script src="./한국 주식 실시간 모니터링 및 텔레그램 알림 시스템_files/chart.js.다운로드"></script>
+    <style>
+        .code-block {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+        .sheet-tab {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px 8px 0 0;
+            color: white;
+            padding: 12px 20px;
+            margin-right: 4px;
+        }
+        .table-container {
+            overflow-x: auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .status-active { 
+            background-color: #10b981; 
+            color: white; 
+            padding: 4px 8px; 
+            border-radius: 4px; 
+            font-size: 12px; 
+        }
+        .status-inactive { 
+            background-color: #ef4444; 
+            color: white; 
+            padding: 4px 8px; 
+            border-radius: 4px; 
+            font-size: 12px; 
+        }
+        .price-up { color: #dc2626; font-weight: bold; }
+        .price-down { color: #2563eb; font-weight: bold; }
+        .formula-cell { 
+            background-color: #f3f4f6; 
+            font-family: 'Courier New', monospace; 
+            font-size: 12px; 
+            color: #374151;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 print:bg-white">
+    
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-600 to-purple-700 text-white py-8 px-6">
+        <div class="max-w-7xl mx-auto">
+            <h1 class="text-4xl font-bold mb-4">
+                <i class="fas fa-chart-line mr-3"></i>
+                한국 주식 실시간 모니터링 &amp; 텔레그램 알림 시스템
+            </h1>
+            <p class="text-xl opacity-90">구글 시트 기반 통합 주식 모니터링 솔루션</p>
+        </div>
+    </div>
+
+    <!-- Overview -->
+    <div class="max-w-7xl mx-auto px-6 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-green-500">
+                <h3 class="text-lg font-semibold text-green-700 mb-2">
+                    <i class="fas fa-eye mr-2"></i>실시간 모니터링
+                </h3>
+                <p class="text-gray-600">GOOGLEFINANCE 함수를 통한 실시간 주가 데이터 연동</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500">
+                <h3 class="text-lg font-semibold text-blue-700 mb-2">
+                    <i class="fab fa-telegram-plane mr-2"></i>텔레그램 알림
+                </h3>
+                <p class="text-gray-600">조건 달성 시 자동 텔레그램 메시지 발송</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-purple-500">
+                <h3 class="text-lg font-semibold text-purple-700 mb-2">
+                    <i class="fas fa-newspaper mr-2"></i>뉴스 모니터링
+                </h3>
+                <p class="text-gray-600">특징주 뉴스 자동 감지 및 알림</p>
+            </div>
+        </div>
+
+        <!-- Sheet 1: 관심종목 관리 -->
+        <div class="mb-12">
+            <div class="sheet-tab inline-block">
+                <i class="fas fa-star mr-2"></i>Sheet 1: 관심종목 관리
+            </div>
+            <div class="table-container">
+                <table class="w-full">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="px-4 py-3 text-left font-semibold">종목코드</th>
+                            <th class="px-4 py-3 text-left font-semibold">종목명</th>
+                            <th class="px-4 py-3 text-left font-semibold">현재가</th>
+                            <th class="px-4 py-3 text-left font-semibold">전일대비</th>
+                            <th class="px-4 py-3 text-left font-semibold">등락률(%)</th>
+                            <th class="px-4 py-3 text-left font-semibold">거래량</th>
+                            <th class="px-4 py-3 text-left font-semibold">목표가</th>
+                            <th class="px-4 py-3 text-left font-semibold">손절가</th>
+                            <th class="px-4 py-3 text-left font-semibold">상승알림(%)</th>
+                            <th class="px-4 py-3 text-left font-semibold">하락알림(%)</th>
+                            <th class="px-4 py-3 text-left font-semibold">알림상태</th>
+                            <th class="px-4 py-3 text-left font-semibold">GOOGLEFINANCE공식</th>
+                            <th class="px-4 py-3 text-left font-semibold">비고</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3 font-bold">005930</td>
+                            <td class="px-4 py-3 font-bold">삼성전자</td>
+                            <td class="px-4 py-3 formula-cell">=GOOGLEFINANCE("KRX:005930","price")</td>
+                            <td class="px-4 py-3 formula-cell">=GOOGLEFINANCE("KRX:005930","change")</td>
+                            <td class="px-4 py-3 formula-cell">=GOOGLEFINANCE("KRX:005930","changepct")</td>
+                            <td class="px-4 py-3 formula-cell">=GOOGLEFINANCE("KRX:005930","volume")</td>
+                            <td class="px-4 py-3 text-blue-600 font-bold">80,000</td>
+                            <td class="px-4 py-3 text-blue-600 font-bold">60,000</td>
+                            <td class="px-4 py-3 text-blue-600 font-bold">5</td>
+                            <td class="px-4 py-3 text-blue-600 font-bold">5</td>
+                            <td class="px-4 py-3"><span class="status-active">활성</span></td>
+                            <td class="px-4 py-3 formula-cell">=GOOGLEFINANCE("KRX:005930","price")</td>
+                            <td class="px-4 py-3 font-bold">대형주 대표종목</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3 font-bold">000660</td>
+                            <td class="px-4 py-3 font-bold">SK하이닉스</td>
+                            <td class="px-4 py-3 formula-cell">=GOOGLEFINANCE("KRX:000660","price")</td>
+                            <td class="px-4 py-3 formula-cell">=GOOGLEFINANCE("KRX:000660","change")</td>
+                            <td class="px-4 py-3 formula-cell">=GOOGLEFINANCE("KRX:000660","changepct")</td>
+                            <td class="px-4 py-3 formula-cell">=GOOGLEFINANCE("KRX:000660","volume")</td>
+                            <td class="px-4 py-3 text-blue-600 font-bold">150,000</td>
+                            <td class="px-4 py-3 text-blue-600 font-bold">100,000</td>
+                            <td class="px-4 py-3 text-blue-600 font-bold">7</td>
+                            <td class="px-4 py-3 text-blue-600 font-bold">7</td>
+                            <td class="px-4 py-3"><span class="status-active">활성</span></td>
+                            <td class="px-4 py-3 formula-cell">=GOOGLEFINANCE("KRX:000660","price")</td>
+                            <td class="px-4 py-3 font-bold">반도체 대장주</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3 font-bold">035420</td>
+                            <td class="px-4 py-3 font-bold">NAVER</td>
+                            <td class="px-4 py-3 formula-cell">=GOOGLEFINANCE("KRX:035420","price")</td>
+                            <td class="px-4 py-3 formula-cell">=GOOGLEFINANCE("KRX:035420","change")</td>
+                            <td class="px-4 py-3 formula-cell">=GOOGLEFINANCE("KRX:035420","changepct")</td>
+                            <td class="px-4 py-3 formula-cell">=GOOGLEFINANCE("KRX:035420","volume")</td>
+                            <td class="px-4 py-3 text-blue-600 font-bold">250,000</td>
+                            <td class="px-4 py-3 text-blue-600 font-bold">180,000</td>
+                            <td class="px-4 py-3 text-blue-600 font-bold">6</td>
+                            <td class="px-4 py-3 text-blue-600 font-bold">6</td>
+                            <td class="px-4 py-3"><span class="status-active">활성</span></td>
+                            <td class="px-4 py-3 formula-cell">=GOOGLEFINANCE("KRX:035420","price")</td>
+                            <td class="px-4 py-3 font-bold">인터넷 플랫폼</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3 font-bold">005380</td>
+                            <td class="px-4 py-3 font-bold">현대차</td>
+                            <td class="px-4 py-3 formula-cell">=GOOGLEFINANCE("KRX:005380","price")</td>
+                            <td class="px-4 py-3 formula-cell">=GOOGLEFINANCE("KRX:005380","change")</td>
+                            <td class="px-4 py-3 formula-cell">=GOOGLEFINANCE("KRX:005380","changepct")</td>
+                            <td class="px-4 py-3 formula-cell">=GOOGLEFINANCE("KRX:005380","volume")</td>
+                            <td class="px-4 py-3 text-blue-600 font-bold">220,000</td>
+                            <td class="px-4 py-3 text-blue-600 font-bold">150,000</td>
+                            <td class="px-4 py-3 text-blue-600 font-bold">5</td>
+                            <td class="px-4 py-3 text-blue-600 font-bold">5</td>
+                            <td class="px-4 py-3"><span class="status-active">활성</span></td>
+                            <td class="px-4 py-3 formula-cell">=GOOGLEFINANCE("KRX:005380","price")</td>
+                            <td class="px-4 py-3 font-bold">자동차 대표주</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3 font-bold">051910</td>
+                            <td class="px-4 py-3 font-bold">LG화학</td>
+                            <td class="px-4 py-3 formula-cell">=GOOGLEFINANCE("KRX:051910","price")</td>
+                            <td class="px-4 py-3 formula-cell">=GOOGLEFINANCE("KRX:051910","change")</td>
+                            <td class="px-4 py-3 formula-cell">=GOOGLEFINANCE("KRX:051910","changepct")</td>
+                            <td class="px-4 py-3 formula-cell">=GOOGLEFINANCE("KRX:051910","volume")</td>
+                            <td class="px-4 py-3 text-blue-600 font-bold">500,000</td>
+                            <td class="px-4 py-3 text-blue-600 font-bold">350,000</td>
+                            <td class="px-4 py-3 text-blue-600 font-bold">8</td>
+                            <td class="px-4 py-3 text-blue-600 font-bold">8</td>
+                            <td class="px-4 py-3"><span class="status-active">활성</span></td>
+                            <td class="px-4 py-3 formula-cell">=GOOGLEFINANCE("KRX:051910","price")</td>
+                            <td class="px-4 py-3 font-bold">배터리 관련주</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Sheet 2: 알림 조건 설정 -->
+        <div class="mb-12">
+            <div class="sheet-tab inline-block">
+                <i class="fas fa-bell mr-2"></i>Sheet 2: 알림 조건 설정
+            </div>
+            <div class="table-container">
+                <table class="w-full">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="px-4 py-3 text-left font-semibold">알림 타입</th>
+                            <th class="px-4 py-3 text-left font-semibold">조건</th>
+                            <th class="px-4 py-3 text-left font-semibold">기준값</th>
+                            <th class="px-4 py-3 text-left font-semibold">활성화</th>
+                            <th class="px-4 py-3 text-left font-semibold">알림 메시지 템플릿</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr>
+                            <td class="px-4 py-3 font-semibold">등락률 알림</td>
+                            <td class="px-4 py-3">상승률 ≥</td>
+                            <td class="px-4 py-3">5%</td>
+                            <td class="px-4 py-3"><span class="status-active">ON</span></td>
+                            <td class="px-4 py-3 text-sm">[상승알림] {종목명} +{등락률}% 달성!</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3 font-semibold">등락률 알림</td>
+                            <td class="px-4 py-3">하락률 ≤</td>
+                            <td class="px-4 py-3">-5%</td>
+                            <td class="px-4 py-3"><span class="status-active">ON</span></td>
+                            <td class="px-4 py-3 text-sm">[하락알림] {종목명} {등락률}% 주의!</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3 font-semibold">목표가 도달</td>
+                            <td class="px-4 py-3">현재가 ≥</td>
+                            <td class="px-4 py-3">목표가</td>
+                            <td class="px-4 py-3"><span class="status-active">ON</span></td>
+                            <td class="px-4 py-3 text-sm">[목표가달성] {종목명} {현재가}원 도달!</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3 font-semibold">손절 알림</td>
+                            <td class="px-4 py-3">현재가 ≤</td>
+                            <td class="px-4 py-3">손절가</td>
+                            <td class="px-4 py-3"><span class="status-active">ON</span></td>
+                            <td class="px-4 py-3 text-sm">[손절알림] {종목명} {현재가}원 손절 검토!</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3 font-semibold">거래량 급증</td>
+                            <td class="px-4 py-3">거래량 ≥</td>
+                            <td class="px-4 py-3">평균 200%</td>
+                            <td class="px-4 py-3"><span class="status-active">ON</span></td>
+                            <td class="px-4 py-3 text-sm">[거래량급증] {종목명} 거래량 {배수}배 급증!</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Sheet 3: 텔레그램 봇 설정 -->
+        <div class="mb-12">
+            <div class="sheet-tab inline-block">
+                <i class="fab fa-telegram-plane mr-2"></i>Sheet 3: 텔레그램 봇 설정
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold mb-4">텔레그램 봇 설정 단계</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-lg mb-2">1. 봇 토큰 설정</h4>
+                        <div class="text-sm text-gray-600 mb-3">
+                            <p>• @BotFather에서 새 봇 생성</p>
+                            <p>• 봇 토큰 복사</p>
+                            <p>• 아래 셀에 입력</p>
+                        </div>
+                        <div class="bg-white p-2 border rounded">
+                            <strong>봇 토큰:</strong> <span class="text-red-500">YOUR_BOT_TOKEN_HERE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-lg mb-2">2. 채널/채팅 ID</h4>
+                        <div class="text-sm text-gray-600 mb-3">
+                            <p>• 알림받을 채널 생성</p>
+                            <p>• 봇을 채널에 추가</p>
+                            <p>• 채널 ID 확인</p>
+                        </div>
+                        <div class="bg-white p-2 border rounded">
+                            <strong>채널 ID:</strong> <span class="text-red-500">@your_channel_id</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="font-semibold text-lg mb-4">메시지 템플릿 설정</h4>
+                <div class="code-block">
+function sendTelegramAlert(message) {
+  const BOT_TOKEN = 'YOUR_BOT_TOKEN';
+  const CHAT_ID = '@your_channel_id';
+  const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+  
+  const payload = {
+    'chat_id': CHAT_ID,
+    'text': message,
+    'parse_mode': 'Markdown'
+  };
+  
+  UrlFetchApp.fetch(url, {
+    'method': 'POST',
+    'contentType': 'application/json',
+    'payload': JSON.stringify(payload)
+  });
+}
+                </div>
+            </div>
+        </div>
+
+        <!-- Sheet 4: 뉴스 모니터링 설정 -->
+        <div class="mb-12">
+            <div class="sheet-tab inline-block">
+                <i class="fas fa-newspaper mr-2"></i>Sheet 4: 뉴스 모니터링 설정
+            </div>
+            <div class="table-container">
+                <table class="w-full">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="px-4 py-3 text-left font-semibold">뉴스 소스</th>
+                            <th class="px-4 py-3 text-left font-semibold">RSS 피드 URL</th>
+                            <th class="px-4 py-3 text-left font-semibold">키워드</th>
+                            <th class="px-4 py-3 text-left font-semibold">활성화</th>
+                            <th class="px-4 py-3 text-left font-semibold">확인 주기</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr>
+                            <td class="px-4 py-3">네이버 뉴스</td>
+                            <td class="px-4 py-3 text-sm">https://news.naver.com/rss/...</td>
+                            <td class="px-4 py-3">급등, 특징주, 대량거래</td>
+                            <td class="px-4 py-3"><span class="status-active">ON</span></td>
+                            <td class="px-4 py-3">10분</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3">조선비즈</td>
+                            <td class="px-4 py-3 text-sm">https://biz.chosun.com/rss/...</td>
+                            <td class="px-4 py-3">투자의견, 목표가</td>
+                            <td class="px-4 py-3"><span class="status-active">ON</span></td>
+                            <td class="px-4 py-3">15분</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3">한국경제</td>
+                            <td class="px-4 py-3 text-sm">https://www.hankyung.com/rss/...</td>
+                            <td class="px-4 py-3">실적발표, 분할합병</td>
+                            <td class="px-4 py-3"><span class="status-active">ON</span></td>
+                            <td class="px-4 py-3">20분</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Sheet 5: 대시보드 -->
+        <div class="mb-12">
+            <div class="sheet-tab inline-block">
+                <i class="fas fa-chart-pie mr-2"></i>Sheet 5: 실시간 모니터링 대시보드
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-gradient-to-r from-green-400 to-green-600 text-white p-4 rounded-lg">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm opacity-80">총 관심종목</p>
+                                <p class="text-2xl font-bold">5개</p>
+                            </div>
+                            <i class="fas fa-eye text-2xl opacity-80"></i>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-blue-400 to-blue-600 text-white p-4 rounded-lg">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm opacity-80">활성 알림</p>
+                                <p class="text-2xl font-bold">5개</p>
+                            </div>
+                            <i class="fas fa-bell text-2xl opacity-80"></i>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white p-4 rounded-lg">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm opacity-80">오늘 알림</p>
+                                <p class="text-2xl font-bold">3회</p>
+                            </div>
+                            <i class="fas fa-history text-2xl opacity-80"></i>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-purple-400 to-purple-600 text-white p-4 rounded-lg">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm opacity-80">뉴스 감지</p>
+                                <p class="text-2xl font-bold">7건</p>
+                            </div>
+                            <i class="fas fa-newspaper text-2xl opacity-80"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-lg mb-4">포트폴리오 현황</h4>
+                        <div style="height: 300px;">
+                            <canvas id="portfolioChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-lg mb-4">최근 알림 내역</h4>
+                        <div class="space-y-2 max-h-64 overflow-y-auto">
+                            <div class="flex items-center p-3 bg-red-50 border-l-4 border-red-400 rounded">
+                                <i class="fas fa-arrow-up text-red-500 mr-3"></i>
+                                <div class="flex-1">
+                                    <p class="font-medium">삼성전자 +5.2% 상승</p>
+                                    <p class="text-sm text-gray-600">09:45 AM</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center p-3 bg-blue-50 border-l-4 border-blue-400 rounded">
+                                <i class="fas fa-arrow-down text-blue-500 mr-3"></i>
+                                <div class="flex-1">
+                                    <p class="font-medium">SK하이닉스 -3.1% 하락</p>
+                                    <p class="text-sm text-gray-600">10:22 AM</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center p-3 bg-green-50 border-l-4 border-green-400 rounded">
+                                <i class="fas fa-bullseye text-green-500 mr-3"></i>
+                                <div class="flex-1">
+                                    <p class="font-medium">NAVER 목표가 달성</p>
+                                    <p class="text-sm text-gray-600">11:15 AM</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Google Apps Script 코드 -->
+        <div class="mb-12">
+            <div class="sheet-tab inline-block">
+                <i class="fas fa-code mr-2"></i>Google Apps Script 자동화 코드
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold mb-4">완전 자동화 스크립트</h3>
+                
+                <h4 class="font-semibold mb-2">1. 메인 모니터링 함수</h4>
+                <div class="code-block mb-6">
+function monitorStocks() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('관심종목관리');
+  const data = sheet.getDataRange().getValues();
+  
+  // 헤더 행 제외하고 데이터 처리
+  for (let i = 1; i &lt; data.length; i++) {
+    const row = data[i];
+    const stockCode = row[0];  // 종목코드
+    const stockName = row[1];  // 종목명
+    const currentPrice = row[2];  // 현재가
+    const changePercent = row[4];  // 등락률
+    const targetPrice = row[6];  // 목표가
+    const stopLoss = row[7];  // 손절가
+    const upAlert = row[8];  // 상승알림
+    const downAlert = row[9];  // 하락알림
+    const alertStatus = row[10];  // 알림상태
+    
+    if (alertStatus === '활성') {
+      checkAlertConditions(stockCode, stockName, currentPrice, changePercent, 
+                         targetPrice, stopLoss, upAlert, downAlert, i + 1);
+    }
+  }
+}
+
+function checkAlertConditions(stockCode, stockName, currentPrice, changePercent, 
+                            targetPrice, stopLoss, upAlert, downAlert, rowNum) {
+  let alertMessage = '';
+  
+  // 등락률 알림 체크
+  if (changePercent &gt;= upAlert) {
+    alertMessage = `🔴 [상승알림] ${stockName}(${stockCode}) +${changePercent}% 달성!\n현재가: ${currentPrice}원`;
+  } else if (changePercent &lt;= -downAlert) {
+    alertMessage = `🔵 [하락알림] ${stockName}(${stockCode}) ${changePercent}% 주의!\n현재가: ${currentPrice}원`;
+  }
+  
+  // 목표가/손절가 알림 체크
+  if (currentPrice &gt;= targetPrice) {
+    alertMessage = `🎯 [목표가달성] ${stockName}(${stockCode})\n현재가: ${currentPrice}원 (목표가: ${targetPrice}원)`;
+  } else if (currentPrice &lt;= stopLoss) {
+    alertMessage = `⚠️ [손절알림] ${stockName}(${stockCode})\n현재가: ${currentPrice}원 (손절가: ${stopLoss}원)`;
+  }
+  
+  // 알림 발송
+  if (alertMessage) {
+    sendTelegramAlert(alertMessage);
+    updateLastAlert(rowNum);
+  }
+}
+
+function sendTelegramAlert(message) {
+  const BOT_TOKEN = 'YOUR_BOT_TOKEN_HERE';  // 실제 봇 토큰으로 교체
+  const CHAT_ID = '@your_channel_id';       // 실제 채널 ID로 교체
+  
+  const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+  
+  const payload = {
+    'chat_id': CHAT_ID,
+    'text': message,
+    'parse_mode': 'Markdown'
+  };
+  
+  try {
+    const response = UrlFetchApp.fetch(url, {
+      'method': 'POST',
+      'contentType': 'application/json',
+      'payload': JSON.stringify(payload)
+    });
+    
+    if (response.getResponseCode() === 200) {
+      console.log('텔레그램 알림 발송 성공');
+    }
+  } catch (error) {
+    console.error('텔레그램 알림 발송 실패:', error);
+  }
+}
+
+function updateLastAlert(rowNum) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('관심종목관리');
+  const now = new Date();
+  sheet.getRange(rowNum, 12).setValue(now);  // 마지막알림시간 업데이트
+}
+                </div>
+
+                <h4 class="font-semibold mb-2">2. 뉴스 모니터링 함수</h4>
+                <div class="code-block mb-6">
+function monitorNews() {
+  const newsSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('뉴스모니터링설정');
+  const newsData = newsSheet.getDataRange().getValues();
+  
+  for (let i = 1; i &lt; newsData.length; i++) {
+    const row = newsData[i];
+    const newsSource = row[0];
+    const rssUrl = row[1];
+    const keywords = row[2].split(',');
+    const isActive = row[3];
+    
+    if (isActive === 'ON') {
+      checkNewsForKeywords(newsSource, rssUrl, keywords);
+    }
+  }
+}
+
+function checkNewsForKeywords(source, rssUrl, keywords) {
+  try {
+    const response = UrlFetchApp.fetch(rssUrl);
+    const rssContent = response.getContentText();
+    
+    // RSS 파싱 (간단한 버전)
+    const titleMatches = rssContent.match(/<title>&lt;!\[CDATA\[(.*?)\]\]&gt;&lt;\/title&gt;/g);
+    
+    if (titleMatches) {
+      titleMatches.forEach(titleMatch =&gt; {
+        const title = titleMatch.replace(/&lt;title&gt;&lt;!\[CDATA\[/, '').replace(/\]\]&gt;&lt;\/title&gt;/, '');
+        
+        keywords.forEach(keyword =&gt; {
+          if (title.includes(keyword.trim())) {
+            const alertMessage = `📰 [뉴스알림] ${source}\n키워드: ${keyword}\n제목: ${title}`;
+            sendTelegramAlert(alertMessage);
+          }
+        });
+      });
+    }
+  } catch (error) {
+    console.error('뉴스 모니터링 오류:', error);
+  }
+}
+                &lt;/div&gt;
+
+                &lt;h4 class="font-semibold mb-2"&gt;3. 트리거 설정 함수&lt;/h4&gt;
+                &lt;div class="code-block"&gt;
+function setupTriggers() {
+  // 기존 트리거 삭제
+  const triggers = ScriptApp.getProjectTriggers();
+  triggers.forEach(trigger =&gt; ScriptApp.deleteTrigger(trigger));
+  
+  // 주식 모니터링 - 5분마다 실행
+  ScriptApp.newTrigger('monitorStocks')
+    .timeBased()
+    .everyMinutes(5)
+    .create();
+  
+  // 뉴스 모니터링 - 10분마다 실행
+  ScriptApp.newTrigger('monitorNews')
+    .timeBased()
+    .everyMinutes(10)
+    .create();
+  
+  console.log('자동화 트리거 설정 완료');
+}
+
+// 초기 설정 실행
+function initialize() {
+  setupTriggers();
+  console.log('한국 주식 모니터링 시스템 초기화 완료');
+}
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- 사용 가이드 --&gt;
+        &lt;div class="mb-12"&gt;
+            &lt;div class="sheet-tab inline-block"&gt;
+                &lt;i class="fas fa-book mr-2"&gt;&lt;/i&gt;사용 가이드
+            &lt;/div&gt;
+            &lt;div class="bg-white p-6 rounded-lg shadow-md"&gt;
+                &lt;h3 class="text-xl font-semibold mb-6"&gt;시스템 설정 및 사용법&lt;/h3&gt;
+                
+                &lt;div class="grid grid-cols-1 md:grid-cols-2 gap-8"&gt;
+                    &lt;div&gt;
+                        &lt;h4 class="font-semibold text-lg mb-4 text-blue-600"&gt;📋 초기 설정&lt;/h4&gt;
+                        &lt;ol class="list-decimal list-inside space-y-2 text-sm"&gt;
+                            &lt;li&gt;구글 시트 복사 후 관심종목 입력&lt;/li&gt;
+                            &lt;li&gt;텔레그램 봇 생성 및 토큰 획득&lt;/li&gt;
+                            &lt;li&gt;알림받을 채널 생성 후 봇 추가&lt;/li&gt;
+                            &lt;li&gt;Apps Script에서 코드 입력 및 권한 승인&lt;/li&gt;
+                            &lt;li&gt;트리거 설정으로 자동화 활성화&lt;/li&gt;
+                        &lt;/ol&gt;
+                    &lt;/div&gt;
+                    
+                    &lt;div&gt;
+                        &lt;h4 class="font-semibold text-lg mb-4 text-green-600"&gt;⚙️ 고급 설정&lt;/h4&gt;
+                        &lt;ul class="list-disc list-inside space-y-2 text-sm"&gt;
+                            &lt;li&gt;알림 조건 세부 조정&lt;/li&gt;
+                            &lt;li&gt;뉴스 키워드 맞춤 설정&lt;/li&gt;
+                            &lt;li&gt;거래량 기준 알림 추가&lt;/li&gt;
+                            &lt;li&gt;포트폴리오별 그룹 관리&lt;/li&gt;
+                            &lt;li&gt;백테스팅 데이터 분석&lt;/li&gt;
+                        &lt;/ul&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class="mt-8 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded"&gt;
+                    &lt;h4 class="font-semibold text-yellow-800 mb-2"&gt;⚠️ 주의사항&lt;/h4&gt;
+                    &lt;ul class="text-sm text-yellow-700 space-y-1"&gt;
+                        &lt;li&gt;• GOOGLEFINANCE 함수는 실시간이 아닌 지연 데이터를 제공합니다&lt;/li&gt;
+                        &lt;li&gt;• 텔레그램 API 호출 제한을 고려하여 알림 빈도를 조절하세요&lt;/li&gt;
+                        &lt;li&gt;• 중요한 투자 결정은 반드시 추가 검증 후 진행하시기 바랍니다&lt;/li&gt;
+                        &lt;li&gt;• 시스템 오류에 대비한 수동 모니터링도 병행하세요&lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        // 포트폴리오 차트 생성
+        const ctx = document.getElementById('portfolioChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['삼성전자', 'SK하이닉스', 'NAVER', '현대차', 'LG화학'],
+                datasets: [{
+                    data: [25, 20, 20, 17.5, 17.5],
+                    backgroundColor: [
+                        '#3B82F6',
+                        '#EF4444', 
+                        '#10B981',
+                        '#F59E0B',
+                        '#8B5CF6'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    }
+                }
+            }
+        });
+
+        // 자동 새로고침 시뮬레이션
+        function updateDashboard() {
+            // 실제 구현에서는 Google Sheets API를 통해 실시간 데이터를 가져옵니다
+            console.log('대시보드 업데이트 중...');
+        }
+
+        // 5분마다 대시보드 업데이트
+        setInterval(updateDashboard, 300000);
+    &lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+    &lt;script id="html_badge_script1"&gt;
+        window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
+            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDnJ6S991isk1099tiiFPI6dbSsJuOX6QtJgJ0t60TydLT0al9vgyE5bxQRSTjFWA%2Bn2%2Fo4D0f4nhGHMyY5HgdgwthUG9CEUwMZpt8gu2OiyWXf42s3zRRAK3nnlE9Mbh6v%2FqVg0r1w3oh9X3RBLp%2Fl9q%2FEyPdgfw7QYQVtl5mxEuFia8SAlT3rx81zQmc6%2BXAwEJw84bmO3fRC1k9gbqUHT8aUYeOss2VGALAn07XwgQdjgzXKi8OaG0CV6OOrUw8l2cHOZW7P58U4iM9e%2FFtBK0EVRHGHCJQPCBcEULqd1%2Fwk%2BMvabbAJ4qlmNRSMyQcwg8QdTosN0H%2F%2Fb1Og5Ucr9rIEkuniR3LSrJoObHjLjTjZBiuRcUMY1F7JZHbH76Ep333S4zoyW%2FBk%2B8LsPGHZrls1VkeR87qntAV9XCWIygIn5OCAHNXDPU6ytvLSSZ1%2FfFXXhzSPfw%2Fu6QssskJsqTuCzPfbwx%2F1o7tCflHYXw10gkk7pWZKY7CPCrlyoXsmX%2FXQWXrKeEcPQt1RJblSw%3D";
+        window.__genspark_locale = "ko-KR";
+        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDnJ6S991isk1099tiiFPI6dbSsJuOX6QtJgJ0t60TydLT0al9vgyE5bxQRSTjFWA+n2/o4D0f4nhGHMyY5HgdgwthUG9CEUwMZpt8gu2OiyWXf42s3zRRAK3nnlE9Mbh6v/qVg0r1w3oh9X3RBLp/l9q/EyPdgfw7QYQVtl5mxEuFia8SAlT3rx81zQmc6+XAwEJw84bmO3fRC1k9gbqUHT8aUYeOss2VGALAn07XwgQdjgzXKi8OaG0CV6OOrUw8l2cHOZW7P58U4iM9e/FtBK0EVRHGHCJQPCBcEULqd1/wk+MvabbAJ4qlmNRSMyQcwg8QdTosN0H//b1Og5Ucr9rIEkuniR3LSrJoObHjLjTjZBiuRcUMY1F7JZHbH76Ep333S4zoyW/Bk+8LsPGHZrls1VkeR87qntAV9XCWIygIn5OCAHNXDPU6ytvLSSZ1/fFXXhzSPfw/u6QssskJsqTuCzPfbwx/1o7tCflHYXw10gkk7pWZKY7CPCrlyoXsmX/XQWXrKeEcPQt1RJblSw=";
+    &lt;/script&gt;
+    
+        &lt;script id="html_badge_script2" src="https://www.genspark.ai/html_badge.js"&gt;&lt;/script&gt;
+        
+    &lt;script id="html_notice_dialog_script" src="https://www.genspark.ai/notice_dialog.js"&gt;&lt;/script&gt;
+    &lt;script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"978a71fed945fcd4","serverTiming":{"name":{"cfExtPri":true,"cfEdge":true,"cfOrigin":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"version":"2025.8.0","token":"4edd5f8ec12a48cfa682ab8261b80a79"}' crossorigin="anonymous"&gt;&lt;/script&gt;
+</title></div></div></div></div></body></html>
